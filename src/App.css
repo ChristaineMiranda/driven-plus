@@ -1,38 +1,229 @@
-.App {
-  text-align: center;
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #FFFFFF;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.telacadastro-input {
+  border-radius: 8px;
+  width: 299px;
+  height: 52px;
+  margin-bottom: 16px;
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  color: #7E7E7E;
+  font-size: 14px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.telainicial {
+  background-color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: 100vh;
+
 }
 
-.App-link {
-  color: #61dafb;
+.link {
+  color: #FFFFFF;
+  text-decoration: underline;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.botao {
+  width: 298px;
+  height: 52px;
+  background-color: #FF4791;
+  border-color: #FF4791;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.logo {
+  margin-bottom: 100px;
+  width: 299px;
+  height: 49px;
+  margin-top: 134px;
+}
+
+.escolha {
+  color: #FFFFFF;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.opcao-plano {
+  padding: 42px 16px;
+  border-color: #7E7E7E;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.preco-plano {
+  color: #FFFFFF;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.image {
+  margin-right: 20px;
+}
+
+.titulo {
+  font-size: 32px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-top: -1px;
+}
+
+.tela-planoselecionado {
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  align-items: center;
+}
+
+.setor {
+  margin-bottom: 3px;
+  margin-top: 15px;
+
+}
+
+.setor img {
+  margin-right: 7px;
+}
+
+.descricao {
+  margin-left: -50px;
+}
+
+.inputs-menores {
+  display: flex;
+  justify-content: space-between;
+  width: 310px;
+
+}
+
+.inputs-menores input {
+  width: 140px;
+  height: 50px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+
+}
+
+.telaplanos-input {
+  border-radius: 8px;
+  width: 299px;
+  height: 52px;
+  margin-bottom: 8px;
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  color: #7E7E7E;
+  font-size: 14px;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 34px;
+}
+
+.tela-alternativa {
+  background: rgba(20, 20, 20, 0.4);
+  position: fixed;
+  z-index: 10;
+  width: 100vh;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aparece-por-cima {
+  width: 248px;
+  height: 210px;
+  background-color: #FFFFFF;
+  color: black;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.aparece-por-cima div{
+  width: 205px;
+  display: flex;
+  justify-content: space-between;
+}
+.aparece-por-cima button{
+  width: 95px;
+  height: 52px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.tela-home{
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+.perfil{
+  position: fixed;
+  top: 22px;
+  right: 22px;
+  z-index: 10;
+}
+.logo-home{
+  position: fixed;
+  top: 22px;
+  left: 22px;
+}
+.acoes{
+ width: 300px;
+  height: 100vh; 
+  margin-top: 130px;
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.acoes-botoes{
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: 12px;
+  width: 300px;
+
+}
+.acoes-botoes button{
+  width: 299px;
+  height: 52px;
+  border-radius: 8px;
+  color: #FFFFFF;
+}
+.acoes-botoes :nth-child(1){
+  background-color: #FF4791;
+  border-color: #FF4791;
+}
+.acoes-botoes :nth-child(2){
+  background-color: #FF4747;
+  border-color: #FF4747;
+  margin-top: 5px;
 }
