@@ -1,7 +1,9 @@
 import styled from "styled-components"
 import { Link } from "react-router-dom"
+
 export default function Opcao(props) {
   const { id, imagem, preco } = props
+  
   return (
     <Link to={`/subscriptions/ID_DO_PLANO/${id}`}>
       <Opcaodiv>

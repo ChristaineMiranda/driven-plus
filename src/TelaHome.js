@@ -3,56 +3,58 @@ import axios from "axios"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import foto from "./style/images/foto-Vector.png"
+import { useContext } from "react"
+import UsuarioContext from "./contexts/UsuarioContext"
+import ItemBeneficio from "./ItemBeneficio"
+import perfil from "./style/images/perfilVector.png"
 
 export default function TelaHome() {
   const [opcoesPlano, setOpcoesPlano] = useState([])
   const [imagem, setImagem] = useState("")
   const navigate = useNavigate()
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIxMywiaWF0IjoxNjcyMDcxMzU1fQ.8feSbIHqIpkIU1L6VWXzM1tQTbjDXh27nJMyDNgtWq0"
-  const tokenFinal = {
-      headers: {
-          Authorization: `Bearer ${token}`
-      }
-  }
+  const {usuario} = useContext(UsuarioContext)
   const url = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions"
 
-  function exibirPlano(resposta){
+  function exibirPlano(resposta) {
     const array = [...resposta.data.perks]
     setOpcoesPlano(array)
     setImagem(resposta.data.image)
   }
+  function falhaExibirPlano(){
+   alert("Não foi possível carregar a página. Faça login novamente")
+   navigate("/")
+  }
 
-  useEffect(()=>{
-    const requisicao = axios.get(url, tokenFinal)
-    console.log("resposta")
+  useEffect(() => {
+    const requisicao = axios.get(url, usuario.chaveUsuario)
     requisicao.then(exibirPlano)
-    requisicao.catch((resposta) => alert(resposta.response.data.message))
-  },[])
+    requisicao.catch(falhaExibirPlano)
+  }, [])
 
-  function sucessoCancelar(){
-   navigate("/subscriptions")
+  function sucessoCancelar() {
+    navigate("/subscriptions")
   }
 
-  function cancelarPlano(){
-    const requisicao = axios.delete(url, tokenFinal)
+  function cancelarPlano() {
+    const requisicao = axios.delete(url, usuario.chaveUsuario)
     requisicao.then(sucessoCancelar)
-    requisicao.catch((resposta)=> alert(resposta.response.data.message))
+    requisicao.catch((resposta) => alert(resposta.response.data.message))
   }
-    return (
-        <TelaHomediv>
-            <LogoImg src="quebrado" alt="logo" />
-            <PerfilImg src={imagem} alt="foto" />
-            <Conteudodiv>
-                <p>Olá, Fulano</p>
-                {opcoesPlano.map((item) => <p>{item.title}</p>)}
-                <div>
-                <BotaoMudarPlano onClick={()=> navigate("/subscriptions")}>Mudar plano</BotaoMudarPlano>
-                <BotaoCancelar onClick={cancelarPlano}>Cancelar plano</BotaoCancelar>
-                </div>
-            </Conteudodiv>
-        </TelaHomediv>
-    )
+  return (
+    <TelaHomediv>
+      <LogoImg src={imagem} alt="logo" />
+      <PerfilImg src={perfil} alt="foto" />
+      <Conteudodiv>
+        <p>Olá, {usuario.nomeUsuario}</p>      
+          {opcoesPlano.map((item) => <ItemBeneficio key={item.id} titulo={item.title} link={item.link} />)}
+        
+        <BotoesAcoes>
+          <BotaoMudarPlano onClick={() => navigate("/subscriptions")}>Mudar plano</BotaoMudarPlano>
+          <BotaoCancelar onClick={cancelarPlano}>Cancelar plano</BotaoCancelar>
+        </BotoesAcoes>
+      </Conteudodiv>
+    </TelaHomediv>
+  )
 }
 
 const TelaHomediv = styled.div`
@@ -61,8 +63,7 @@ const TelaHomediv = styled.div`
   align-items: center;
   height: 100vh;
   `
-
-  const Conteudodiv = styled.div`
+const Conteudodiv = styled.div`
   width: 300px;
   height: 100vh; 
   margin-top: 130px;
@@ -71,8 +72,13 @@ const TelaHomediv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  div{
-    display: flex;
+  p{
+    margin-bottom: 50px;
+    margin-top: 20px;
+  }
+`
+const BotoesAcoes = styled.div`
+ display: flex;
   flex-direction: column;
   position: fixed;
   bottom: 12px;
@@ -83,7 +89,7 @@ const TelaHomediv = styled.div`
   border-radius: 8px;
   color: #FFFFFF;
   }
-  }
+  
 `
 const BotaoMudarPlano = styled.button`
 background-color: #FF4791;
@@ -104,4 +110,6 @@ const LogoImg = styled.img`
   position: fixed;
   top: 22px;
   left: 22px;
+  width: 60px;
+  height: 50px;
 `

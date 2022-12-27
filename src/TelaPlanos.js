@@ -2,11 +2,13 @@ import styled from "styled-components"
 import axios from "axios"
 import { useState } from "react"
 import { useEffect } from "react"
+import { useContext } from "react"
+import UsuarioContext from "./contexts/UsuarioContext"
 import Opcao from "./Opcao"
 
-export default function TelaPlanos(props) {
+export default function TelaPlanos() {
   const [planos, setPlanos] = useState([])
-  // const {token} = props
+  const { usuario } = useContext(UsuarioContext)
 
   function sucessoRequisicao(resposta) {
     const novoarray = [...resposta.data]
@@ -17,17 +19,8 @@ export default function TelaPlanos(props) {
   }
 
   useEffect(() => {
-   const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIxMywiaWF0IjoxNjcyMDcxMzU1fQ.8feSbIHqIpkIU1L6VWXzM1tQTbjDXh27nJMyDNgtWq0"
-
-    console.log("token")
-    console.log(token)
     const url = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships"
-    const tokenFinal = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-    const requisicao = axios.get(url, tokenFinal)
+    const requisicao = axios.get(url, usuario.chaveUsuario)
     requisicao.then(sucessoRequisicao)
     requisicao.catch(falhaRequisicao)
   }, [])
@@ -48,7 +41,7 @@ const Conteudodiv = styled.div`
   justify-content: center;
   height: 100vh;
 p{
-      color: #FFFFFF;
+  color: #FFFFFF;
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 15px;

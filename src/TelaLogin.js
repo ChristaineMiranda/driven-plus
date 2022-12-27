@@ -1,36 +1,43 @@
 import styled from "styled-components"
 import axios from "axios"
 import { Link } from "react-router-dom"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
+import UsuarioContext from "./contexts/UsuarioContext"
 import logo from "./style/images/Driven_white 1.png"
 
 
-export default function TelaLogin(props) {
+export default function TelaLogin() {
   const [login, setLogin] = useState("")
   const [senha, setSenha] = useState("")
   const navigate = useNavigate()
-  const {setToken}= props
+  const {setUsuario } = useContext(UsuarioContext)
 
   function falhaLogin(erro) {
     alert(erro.response.data.message)
   }
-  
-  function sucessoLogin(resposta) {
-    setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIxMywiaWF0IjoxNjcyMDcxMzU1fQ.8feSbIHqIpkIU1L6VWXzM1tQTbjDXh27nJMyDNgtWq0")
 
-    console.log(resposta.data)
+  function sucessoLogin(resposta) {
+    const token = {
+      headers: {
+        Authorization: `Bearer ${resposta.data.token}`
+      }
+    }
+
+    setUsuario({ nomeUsuario: resposta.data.name, chaveUsuario: token })//Armazenando credencias no contexto
+    const dadosSerializados = JSON.stringify(resposta.data)
+    localStorage.setItem("dadosUsuario", dadosSerializados) //Armazenando credenciais no computador do usuário
+
     const plano = resposta.data.membership
     //Se usuário não tem um plano
-    if(plano === null){
+    if (plano === null) {
       navigate("/subscriptions")
     }
-
     //Se usuário tem um plano
-    else{
+    else {
       navigate("/home")
     }
-  
   }
 
   function entrar(event) {
@@ -41,12 +48,11 @@ export default function TelaLogin(props) {
     enviar.catch(falhaLogin)
   }
 
-
   return (
     <Teladiv onSubmit={entrar}>
       <img src={logo} alt="logo" />
-      <input type="email" name="email" placeholder=" E-mail" value={login} onChange={(event) => (setLogin(event.target.value))} required/>
-      <input type="password" name="senha" placeholder=" Senha" value={senha} onChange={(event) => (setSenha(event.target.value))} required/>
+      <input type="email" name="email" placeholder=" E-mail" value={login} onChange={(event) => (setLogin(event.target.value))} required />
+      <input type="password" name="senha" placeholder=" Senha" value={senha} onChange={(event) => (setSenha(event.target.value))} required />
       <button type="submit">ENTRAR</button>
       <Link to="/sign-up"><p >Não possui uma conta? Cadastre-se</p></Link>
     </Teladiv>

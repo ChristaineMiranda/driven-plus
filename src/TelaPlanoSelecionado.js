@@ -3,6 +3,8 @@ import axios from "axios"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useContext } from "react"
+import UsuarioContext from "./contexts/UsuarioContext"
 import ReactModal from 'react-modal'
 import benef from "./style/images/Vector.png"
 import nota from "./style/images/notaVector.png"
@@ -11,13 +13,14 @@ import sair from "./style/images/sairVector.png"
 
 
 export default function TelaPlanoSelecionado() {
-
     const { selecionado } = useParams()
     const navigate = useNavigate()
+    const {usuario} = useContext(UsuarioContext)
+
     //controle dos inputs
     const [nomeCartao, setNomeCartao] = useState("")
     const [digitosCartao, setDigitosCartao] = useState()
-    const[codigo, setCodigo] = useState()
+    const [codigo, setCodigo] = useState()
     const [validade, setValidade] = useState("")
 
     //Controle da renderização do plano escolhido
@@ -27,16 +30,9 @@ export default function TelaPlanoSelecionado() {
     const [preco, setPreco] = useState("")
     const [mostrar, setMostrar] = useState(false)
     const [clicado, setClicado] = useState("")
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIxMywiaWF0IjoxNjcyMDcxMzU1fQ.8feSbIHqIpkIU1L6VWXzM1tQTbjDXh27nJMyDNgtWq0"
-    const tokenFinal = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
+    
 
     function sucessoRequisicao(resposta) {
-        console.log(resposta)
-
         setImagem(resposta.data.image)
         setNome(resposta.data.name)
         setBeneficios([...resposta.data.perks])
@@ -49,22 +45,24 @@ export default function TelaPlanoSelecionado() {
 
     useEffect(() => {
         const url = `https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships/${selecionado}`
-        const requisicao = axios.get(url, tokenFinal)
+        const requisicao = axios.get(url, usuario.chaveUsuario)
         requisicao.then(sucessoRequisicao)
         requisicao.catch(falhaRequisicao)
     }, [])
 
-    function assinarPlano(event){
+    function assinarPlano(event) {
         event.preventDefault()
         setMostrar(true)
     }
-    function cancelar(){
+    function cancelar() {
         setClicado("nao")
-        setTimeout( ()=> {setMostrar(false)
-        setClicado("")},500)       
+        setTimeout(() => {
+            setMostrar(false)
+            setClicado("")
+        }, 500)
     }
-    
-    function confirmar(){
+
+    function confirmar() {
         setClicado("sim")
         const url = "https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions"
         const selecionadoDado = parseInt(selecionado)
@@ -76,14 +74,14 @@ export default function TelaPlanoSelecionado() {
             securityNumber: codigoDado,
             expirationDate: validade
         }
-        const requisicao = axios.post(url, dados, tokenFinal)
-        requisicao.then(()=> navigate("/home"))
+        const requisicao = axios.post(url, dados, usuario.chaveUsuario)
+        requisicao.then(() => navigate("/home"))
         requisicao.catch(falhaRequisicao)
     }
 
     return (
         <Conteudodiv>
-            <SetaVoltar src={seta} onClick={()=> navigate("/subscriptions")} />
+            <SetaVoltar src={seta} onClick={() => navigate("/subscriptions")} />
             <div >
                 <img src={imagem} alt="logo" />
                 <Titulo>{nome}</Titulo>
@@ -94,7 +92,6 @@ export default function TelaPlanoSelecionado() {
                     <span>Benefícios:</span>
                 </div>
                 {beneficios.map((item, indice) => <p>{indice + 1}. {item.title}</p>)}
-
                 <div>
                     <img src={nota} alt="nota" />
                     <span>Preço:</span>
@@ -106,17 +103,15 @@ export default function TelaPlanoSelecionado() {
                 <input type="text" name="digitos" placeholder="   Digitos do cartão" value={digitosCartao} onChange={(event) => (setDigitosCartao(event.target.value))} required />
 
                 <div>
-                    <input type="text" name="codigo" placeholder="  Código de segurança" value={codigo} onChange={(event) => (setCodigo(event.target.value))} required />
+                    <input type="number" name="codigo" placeholder="  Código de segurança" value={codigo} onChange={(event) => (setCodigo(event.target.value))} required />
                     <input type="text" name="validade" placeholder="  Validade" value={validade} onChange={(event) => (setValidade(event.target.value))} required />
                 </div>
                 <button type="submit">ASSINAR</button>
             </Inputsdiv>
-            
-            <ReactModal 
-            isOpen={mostrar}
-            >
-            <CaixaConfirmacao clicado={clicado}>
-                    <img src={sair} alt="sair" onClick={()=>setMostrar(false)}/>
+
+            <ReactModal isOpen={mostrar} >
+                <CaixaConfirmacao clicado={clicado}>
+                    <img src={sair} alt="sair" onClick={() => setMostrar(false)} />
                     <p>Tem certeza que deseja assinar o plano Driven Plus (R$ 39,99)?</p>
                     <div>
                         <button onClick={cancelar}>Não</button>
@@ -124,14 +119,11 @@ export default function TelaPlanoSelecionado() {
                     </div>
                 </CaixaConfirmacao>
             </ReactModal>
-           
+
         </Conteudodiv>
     )
 }
-const ModalDiv = styled.div`
-width:20px;
-background-color: red;
-`
+
 const Conteudodiv = styled.div`
     display: flex;
     flex-direction: column;
@@ -204,7 +196,7 @@ top: 18px;
 left: 18px;
 `
 const CaixaConfirmacao = styled.div`
-  width: 248px;
+  width: 250px;
   height: 210px;
   background-color: #FFFFFF;
   color: black;
@@ -237,12 +229,12 @@ button{
   font-weight: 700;
 }
 button:nth-child(1){
-  border-color: ${props=> props.clicado==="nao"? "#FF4791": "#CECECE"};
-  background-color: ${props=> props.clicado=== "nao"? "#FF4791": "#CECECE"};
+  border-color: ${props => props.clicado === "nao" ? "#FF4791" : "#CECECE"};
+  background-color: ${props => props.clicado === "nao" ? "#FF4791" : "#CECECE"};
 }
 button:nth-child(2){
-  border-color: ${props=> props.clicado === "sim"? "#FF4791": "#CECECE"};
-  background-color: ${props=> props.clicado==="sim"? "#FF4791": "#CECECE"};
+  border-color: ${props => props.clicado === "sim" ? "#FF4791" : "#CECECE"};
+  background-color: ${props => props.clicado === "sim" ? "#FF4791" : "#CECECE"};
 }
 
 

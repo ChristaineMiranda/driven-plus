@@ -12,7 +12,6 @@ export default function TelaCadastro() {
   const navigate = useNavigate()
 
   function falhaCadastro(erro) {
-    console.log(erro.response.data)
     alert(erro.response.data.message)
   }
   function sucessoCadastro() {
@@ -28,7 +27,6 @@ export default function TelaCadastro() {
       cpf: cpf,
       password: senha
     }
-    console.log(dadosCadastrais)
     const enviarCadastro = axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/auth/sign-up", dadosCadastrais)
     enviarCadastro.then(sucessoCadastro)
     enviarCadastro.catch(falhaCadastro)
