@@ -22,7 +22,6 @@ export default function TelaHome() {
   }
   function falhaExibirPlano(){
    alert("Não foi possível carregar a página. Faça login novamente")
-   navigate("/")
   }
 
   useEffect(() => {

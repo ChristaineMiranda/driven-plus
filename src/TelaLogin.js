@@ -14,6 +14,13 @@ export default function TelaLogin() {
   const navigate = useNavigate()
   const {setUsuario } = useContext(UsuarioContext)
 
+  useEffect(()=>{
+    let armazenadoLocal = localStorage.getItem("dadosUsuario")
+    if(armazenadoLocal){
+      navigate("/home")
+    }
+  },[])
+
   function falhaLogin(erro) {
     alert(erro.response.data.message)
   }
