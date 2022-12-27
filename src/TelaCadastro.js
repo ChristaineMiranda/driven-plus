@@ -2,19 +2,26 @@ import styled from "styled-components"
 import axios from "axios"
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 export default function TelaCadastro() {
   const [nome, setNome] = useState("")
-  const [cpf, setCpf] = useState(0)
+  const [cpf, setCpf] = useState()
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
-  function falhaCadastro() {
-    alert("Não foi possível realizar o cadastro. Tente novamente")
+  const navigate = useNavigate()
+
+  function falhaCadastro(erro) {
+    console.log(erro.response.data)
+    alert(erro.response.data.message)
   }
   function sucessoCadastro() {
-   //REDIRECIONAR PARA TELA DE LOGIN
+    //REDIRECIONAR PARA TELA DE LOGIN
+    alert("Cadatro realizado com sucesso!")
+    navigate("/")
   }
-  function cadastrar() {
+  function cadastrar(event) {
+    event.preventDefault()
     const dadosCadastrais = {
       email: email,
       name: nome,
@@ -29,12 +36,12 @@ export default function TelaCadastro() {
   }
 
   return (
-    <Conteudodiv>
-      <input type="text" name="nome" placeholder="      Nome" value={nome} onChange={(event) => (setNome(event.target.value))} />
-      <input type="text" name="CPF" placeholder="     CPF" value={cpf} onChange={(event) => (setCpf(event.target.value))} />
-      <input type="text" name="email" placeholder="     E-mail" value={email} onChange={(event) => (setEmail(event.target.value))} />
-      <input type="text" name="senha" placeholder="   Senha" value={senha} onChange={(event) => (setSenha(event.target.value))} />
-      <button onClick={cadastrar}>CADASTRAR</button>
+    <Conteudodiv onSubmit={cadastrar}>
+      <input type="text" name="nome" placeholder="      Nome" value={nome} onChange={(event) => (setNome(event.target.value))} required />
+      <input type="number" name="CPF" placeholder="     CPF" value={cpf} onChange={(event) => (setCpf(event.target.value))} required />
+      <input type="email" name="email" placeholder="     E-mail" value={email} onChange={(event) => (setEmail(event.target.value))} required />
+      <input type="password" name="senha" placeholder="   Senha" value={senha} onChange={(event) => (setSenha(event.target.value))} required />
+      <button type="submit">CADASTRAR</button>
       <Link to="/"><p>Já possui uma conta? Entre</p></Link>
 
     </Conteudodiv>
@@ -42,7 +49,7 @@ export default function TelaCadastro() {
 }
 
 
-const Conteudodiv = styled.div`
+const Conteudodiv = styled.form`
   background-color: black;
   display: flex;
   flex-direction: column;

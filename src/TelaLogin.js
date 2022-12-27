@@ -2,22 +2,40 @@ import styled from "styled-components"
 import axios from "axios"
 import { Link } from "react-router-dom"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import logo from "./style/images/Driven_white 1.png"
 
 
-export default function TelaLogin() {
+export default function TelaLogin(props) {
   const [login, setLogin] = useState("")
   const [senha, setSenha] = useState("")
+  const navigate = useNavigate()
+  const {setToken}= props
 
-  function falhaLogin(erro){
-    alert("Usuário não cadastrado/Dados inválidos!")
+  function falhaLogin(erro) {
+    alert(erro.response.data.message)
   }
-  function sucessoLogin(resposta){
-    console.log(resposta)
+  
+  function sucessoLogin(resposta) {
+    setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIxMywiaWF0IjoxNjcyMDcxMzU1fQ.8feSbIHqIpkIU1L6VWXzM1tQTbjDXh27nJMyDNgtWq0")
+
+    console.log(resposta.data)
+    const plano = resposta.data.membership
+    //Se usuário não tem um plano
+    if(plano === null){
+      navigate("/subscriptions")
+    }
+
+    //Se usuário tem um plano
+    else{
+      navigate("/home")
+    }
+  
   }
 
-  function entrar() {
-    const dados = {email:login, password:senha}
+  function entrar(event) {
+    event.preventDefault()
+    const dados = { email: login, password: senha }
     const enviar = axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/auth/login", dados)
     enviar.then(sucessoLogin)
     enviar.catch(falhaLogin)
@@ -25,17 +43,17 @@ export default function TelaLogin() {
 
 
   return (
-    <Teladiv>
+    <Teladiv onSubmit={entrar}>
       <img src={logo} alt="logo" />
-      <input type="text" name="email" placeholder=" E-mail" value={login} onChange={(event) => (setLogin(event.target.value))} />
-      <input type="text" name="senha" placeholder=" Senha" value={senha} onChange={(event) => (setSenha(event.target.value))} />
-      <button onClick={entrar} >ENTRAR</button>
-      <Link to="/sign-up"><p >Não possui uma conta? Cadastre-se</p></Link> 
+      <input type="email" name="email" placeholder=" E-mail" value={login} onChange={(event) => (setLogin(event.target.value))} required/>
+      <input type="password" name="senha" placeholder=" Senha" value={senha} onChange={(event) => (setSenha(event.target.value))} required/>
+      <button type="submit">ENTRAR</button>
+      <Link to="/sign-up"><p >Não possui uma conta? Cadastre-se</p></Link>
     </Teladiv>
   )
 }
 
-const Teladiv = styled.div`
+const Teladiv = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,7 +66,7 @@ const Teladiv = styled.div`
   margin-top: 134px;
   }
   input{
-    border-radius: 8px;
+  border-radius: 8px;
   width: 299px;
   height: 52px;
   margin-bottom: 16px;
